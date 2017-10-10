@@ -6,7 +6,6 @@
 # @File    : 83.py
 # @Software: PyCharm
 
-import re
 from urllib import request
 from urllib import parse
 import json
@@ -15,7 +14,7 @@ try:
 
     url = 'http://fanyi.baidu.com/sug'
     formData = {}
-    formData['kw'] = '中国'
+    formData['kw'] = '南京'
 
     param = parse.urlencode(formData).encode('utf-8')
 
