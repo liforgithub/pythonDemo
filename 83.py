@@ -6,8 +6,7 @@
 # @File    : 83.py
 # @Software: PyCharm
 
-from urllib import request
-from urllib import parse
+from urllib import request, parse
 import json
 
 try:
