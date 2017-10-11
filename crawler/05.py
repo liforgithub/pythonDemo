@@ -49,8 +49,9 @@ class workThread(threading.Thread):
 class displayThread(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
-    def getid(self):
-        return str('display')
+    @staticmethod
+    def getid():
+        return 'display'
     def run(self):
         temp = 0
         n = 0
