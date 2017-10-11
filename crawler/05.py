@@ -15,6 +15,7 @@ import operator
 url = 'http://www.jikexueyuan.com/course/'
 urls = 'http://www.jikexueyuan.com/course/?pageNum='
 courseDict = {}
+totalPage = 0
 
 class workThread(threading.Thread):
     def __init__(self, threadID, st, end):
@@ -55,9 +56,9 @@ class displayThread(threading.Thread):
     def run(self):
         temp = 0
         n = 0
-        while n != 2303:
+        while n != totalPage:
             n = len(courseDict)
-            num = int(n / 2303 * 100)
+            num = int(n / totalPage * 100)
             if temp != num:
                 temp = num
                 print("已完成" + str(num) + "%")
