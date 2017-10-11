@@ -15,8 +15,8 @@ def exechttp(url, code):
         res = request.urlopen(url)
         recvbody = res.read().decode(code)
         return recvbody
-    except Exception as ee:
-        print(ee)
+    except Exception:
+        raise Exception
 
 url = 'http://www.jikexueyuan.com/course/'
 urls = 'http://www.jikexueyuan.com/course/?pageNum='
