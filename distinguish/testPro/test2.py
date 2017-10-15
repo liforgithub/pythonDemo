@@ -13,8 +13,8 @@ import time
 sys.path.append("..")
 from distinguish import distinguish
 
-img_open_path = 'E:\\pythonDemo\\distinguish\\img\\1.bmp'
-img_save_path = 'E:\\pythonDemo\\distinguish\\train\\'
+img_open_path = 'D:\\python_pro\\pythonDemo\\distinguish\\img\\1.bmp'
+img_save_path = 'D:\\python_pro\\pythonDemo\\distinguish\\train\\'
 
 def get_feature(img):
     """
@@ -49,7 +49,7 @@ start = time.time()
 
 for ii in range(1, 101):
     # 二值化
-    image = Image.open('E:\\pythonDemo\\distinguish\\img\\' + str(ii) + '.bmp')
+    image = Image.open('D:\\python_pro\\pythonDemo\\distinguish\\img\\' + str(ii) + '.bmp')
     imgry = image.convert('L')  # 转化为灰度图
 
     dgh = distinguish(imgry, 140)
@@ -115,6 +115,6 @@ for ii in range(1, 101):
 
     end = time.time()
 
-    image.save('E:\\pythonDemo\\distinguish\\tmp\\' + ''.join(result) + '.bmp')
+    image.save('D:\\python_pro\\pythonDemo\\distinguish\\tmp\\' + ''.join(result) + '.bmp')
     print(ii)
     print(end - start)

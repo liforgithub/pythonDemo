@@ -25,7 +25,7 @@ def preprocess(gray):
     cv2.imshow('sobel', sobel)
     cv2.waitKey(0)
     # 二值化
-    ret, binary = cv2.threshold(sobel, 50, 255, cv2.THRESH_BINARY)
+    ret, binary = cv2.threshold(sobel, 170, 255, cv2.THRESH_BINARY)
     cv2.imshow('binary', binary)
     cv2.waitKey(0)
     # 膨胀和腐蚀操作的核函数
@@ -77,8 +77,8 @@ def findPlateNumberRegion(img):
         ratio = float(width) / float(height)
         print("ratio:")
         print(ratio)
-        # if ratio > 5 or ratio < 2:
-        #     continue
+        if ratio > 5 or ratio < 2:
+            continue
         region.append(box)
 
     return region
@@ -99,9 +99,9 @@ def detect(img):
     cv2.imshow('gray', gray)
     cv2.waitKey(0)
 
-    gray = inverse_color(gray)
-    cv2.imshow('regray', gray)
-    cv2.waitKey(0)
+    # gray = inverse_color(gray)
+    # cv2.imshow('regray', gray)
+    # cv2.waitKey(0)
 
     # 形态学变换的预处理
     dilation = preprocess(gray)
@@ -138,11 +138,11 @@ def detect(img):
 
 
 if __name__ == '__main__':
-    #imagePath = './10.jpg'
-    imagePath = './2.bmp'
+    imagePath = './10.jpg'
+    # imagePath = './2.bmp'
     img = cv2.imread(imagePath)
-    height, width = img.shape[:2]
-    img = cv2.resize(img, (int(width / 10), int(height / 10)), interpolation=cv2.INTER_CUBIC)
+    #height, width = img.shape[:2]
+    # img = cv2.resize(img, (int(width / 10), int(height / 10)), interpolation=cv2.INTER_CUBIC)
     cv2.imshow('img', img)
     cv2.waitKey(0)
     detect(img)

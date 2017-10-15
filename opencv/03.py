@@ -9,6 +9,20 @@
 import cv2
 import numpy as np
 
+#获取检测到的最小矩形坐标
+def getRectangularCoordinate(box):
+    ys = [box[0, 1], box[1, 1], box[2, 1], box[3, 1]]
+    xs = [box[0, 0], box[1, 0], box[2, 0], box[3, 0]]
+    ys_sorted_index = np.argsort(ys)
+    xs_sorted_index = np.argsort(xs)
+
+    x1 = box[xs_sorted_index[0], 0]
+    x2 = box[xs_sorted_index[3], 0]
+
+    y1 = box[ys_sorted_index[0], 1]
+    y2 = box[ys_sorted_index[3], 1]
+
+    return [x1, x2, y1, y2]
 
 def findPlateNumberRegion(img, large, small):
     region = []
@@ -46,8 +60,8 @@ def findPlateNumberRegion(img, large, small):
 
 
 def getEffectiveArea(img, srcImg):
-    ret3, th3 = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    cv2.imshow('getEffectiveArea-th3', th3)
+    [ret3, th3] = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    cv2.imshow('th3', th3)
 
     kernel = np.ones((10, 10), np.uint8)
     erosion = cv2.erode(th3, kernel, iterations=1)
@@ -59,49 +73,42 @@ def getEffectiveArea(img, srcImg):
 
     box, angel = findPlateNumberRegion(dilation, 2, 1)
 
-    cv2.drawContours(srcImg, [box], 0, (0, 255, 0), 2)
 
-    ys = [box[0, 1], box[1, 1], box[2, 1], box[3, 1]]
-    xs = [box[0, 0], box[1, 0], box[2, 0], box[3, 0]]
-    ys_sorted_index = np.argsort(ys)
-    xs_sorted_index = np.argsort(xs)
-
-    x1 = box[xs_sorted_index[0], 0]
-    x2 = box[xs_sorted_index[3], 0]
-
-    y1 = box[ys_sorted_index[0], 1]
-    y2 = box[ys_sorted_index[3], 1]
-
-    img_org2 = srcImg.copy()
-
-    cv2.imshow('img_org2', img_org2)
-    cv2.waitKey(0)
-
-    img_plate = img_org2[y1:y2, x1:x2]
-    img = img[y1:y2, x1:x2]
-    cv2.imshow('number plate', img_plate)
-    cv2.waitKey(0)
-
-    rows, cols, _ = img_plate.shape
+    rows, cols, _ = srcImg.shape
     # 这里的第一个参数为旋转中心，第二个为旋转角度，第三个为旋转后的缩放因子
     # 可以通过设置旋转中心，缩放因子，以及窗口大小来防止旋转后超出边界的问题
     M = cv2.getRotationMatrix2D((cols / 2, rows / 2), angel, 1)
     # 第三个参数是输出图像的尺寸中心
-    img_plate = cv2.warpAffine(img_plate, M, (cols, rows))
+    srcImg = cv2.warpAffine(srcImg, M, (cols, rows))
+    dilation = cv2.warpAffine(dilation, M, (cols, rows))
     img = cv2.warpAffine(img, M, (cols, rows))
 
-    #(340, 530)为正常可辨识范围取的基本值，可浮动
+    box, angel = findPlateNumberRegion(dilation, 2, 1)
+
+    cv2.drawContours(srcImg, [box], 0, (0, 255, 0), 2)
+
+    coordinate = getRectangularCoordinate(box)
+
+    img_org2 = srcImg.copy()
+
+    img_plate = img_org2[coordinate[2]:coordinate[3], coordinate[0]:coordinate[1]]
+    img = img[coordinate[2]:coordinate[3], coordinate[0]:coordinate[1]]
+    cv2.imshow('number plate', img_plate)
+    cv2.waitKey(0)
+
+    #(530, 340)为正常可辨识范围取的基本值，可浮动
     img = cv2.resize(img, (530, 340), interpolation=cv2.INTER_CUBIC)
     img_plate = cv2.resize(img_plate, (530, 340), interpolation=cv2.INTER_CUBIC)
 
     cv2.imshow('img_plate', img_plate)
+    cv2.imshow('img-00', img)
     cv2.waitKey(0)
 
     return img, img_plate
 
 
-img = cv2.imread('./img/3.bmp')
-cv2.imshow('img', img)
+img = cv2.imread('./img/04.bmp')
+cv2.imshow('src-img', img)
 
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -129,26 +136,15 @@ dilation = cv2.dilate(erosion, kernel, iterations=1)
 cv2.imshow('th3-dilation', dilation)
 cv2.waitKey(0)
 
-box, angel = findPlateNumberRegion(dilation, 9, 6)
+box, angel = findPlateNumberRegion(dilation, 10, 6)
 
 cv2.drawContours(srcImg, [box], 0, (0, 255, 0), 2)
 
-ys = [box[0, 1], box[1, 1], box[2, 1], box[3, 1]]
-xs = [box[0, 0], box[1, 0], box[2, 0], box[3, 0]]
-ys_sorted_index = np.argsort(ys)
-xs_sorted_index = np.argsort(xs)
-
-x1 = box[xs_sorted_index[0], 0]
-x2 = box[xs_sorted_index[3], 0]
-
-y1 = box[ys_sorted_index[0], 1]
-y2 = box[ys_sorted_index[3], 1]
+coordinate = getRectangularCoordinate(box)
 
 img_org2 = srcImg.copy()
 
-cv2.imshow('img_org2', img_org2)
-
-img_plate = img_org2[y1:y2, x1:x2]
+img_plate = img_org2[coordinate[2]:coordinate[3], coordinate[0]:coordinate[1]]
 cv2.imshow('number plate', img_plate)
 
 rows, cols, _ = img_plate.shape

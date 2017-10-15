@@ -11,7 +11,7 @@ from PIL import Image
 import os
 
 #img_open_path = 'E:\\pythonDemo\\distinguish\\img\\1.bmp'
-img_save_path = 'E:\\pythonDemo\\distinguish\\train\\'
+img_save_path = 'D:\\python_pro\\pythonDemo\\distinguish\\train\\'
 
 #for k in range(1, 101):
 # img_open_path = 'E:\\pythonDemo\\distinguish\\img\\' + str(k) + '.bmp'
@@ -66,7 +66,7 @@ def train(img_open_path):
             #筛选出个数为 1或者2 的点的坐标即为 孤立点 ，去除
             num = dgh.sum_9_region(i, j)
             if num == 1 or num == 2:
-                img_gray[i, j] = 0
+                img_gray[i, j] = 1
     print('去除噪点完成')
 
     # 分割数字个数
@@ -100,4 +100,4 @@ def train(img_open_path):
         fo.close()
 
 for i in range(1, 101):
-    train('E:\\pythonDemo\\distinguish\\img\\' + str(i) + '.bmp')
+    train('D:\\python_pro\\pythonDemo\\distinguish\\img\\' + str(i) + '.bmp')

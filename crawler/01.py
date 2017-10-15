@@ -7,7 +7,7 @@ data = res.decode('utf-8')
 
 soup = bs4.BeautifulSoup(data, 'html.parser')
 
-list_a = soup.select('a')
+list_a = soup.select('.newsItem')
 
 for a in list_a:
     print(a.text)
