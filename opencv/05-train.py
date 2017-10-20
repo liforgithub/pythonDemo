@@ -9,7 +9,7 @@
 import cv2
 import numpy as np
 import os
-import time
+import matplotlib.pyplot as plt
 
 # 生成训练集
 def get_feature(img):
@@ -155,7 +155,7 @@ def getEffectiveArea(img, srcImg):
     return img, img_plate
 
 
-img = cv2.imread('./img/01.bmp')
+img = cv2.imread('./img/04.bmp')
 # cv2.imshow('src-img', img)
 
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -209,7 +209,8 @@ gray = cv2.cvtColor(dst, cv2.COLOR_BGR2GRAY)
 
 blur = cv2.GaussianBlur(gray, (5, 5), 0)
 
-ret3, th3 = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+th3 = cv2.adaptiveThreshold(blur, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 11, 8)
+# ret3, th3 = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
 # cv2.imshow('th3-eff', th3)
 # cv2.waitKey(0)
@@ -241,32 +242,44 @@ i = 0
 for img in imgList:
     h, w, _ = img.shape
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    ret3, bin = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-    bin2 = cv2.resize(bin, (w * 10, h * 10), interpolation=cv2.INTER_CUBIC)
-    cv2.imshow(str(i), bin2)
+    # 直方图均衡化
+    gray = cv2.equalizeHist(gray)
+    cv2.imshow('equalizeHist', gray)
+    cv2.waitKey(0)
+    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    median = cv2.medianBlur(blur, 1)
+    # median = cv2.bilateralFilter(gray, 9, 75, 75)
+    # 阈值一定要设为 0！
+    bin_adaptiveThreshold = cv2.adaptiveThreshold(median, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, 13, 11)
+    bin2 = cv2.resize(bin_adaptiveThreshold, (w * 10, h * 10), interpolation=cv2.INTER_CUBIC)
+    plt.figure()
+    plt.subplot(221), plt.imshow(bin_adaptiveThreshold, 'gray')
+    plt.subplot(222), plt.hist(blur.ravel(), 256)  # .ravel方法将矩阵转化为一维
+    plt.subplot(223), plt.imshow(blur, 'gray')
+    plt.show()
 
-    k = cv2.waitKey(0)
-    while k != 13:
-        k = cv2.waitKey(0)
-
-    pathNum = input('输入：')
-    l = os.listdir(img_save_path + pathNum)
-    size = len(l)
-    size += 1
-    cv2.imwrite(img_save_path + pathNum + '\\' + str(size) + '.bmp', img)
-
-    # 生成模型集
-    pixel_list = get_feature(bin)
-
-    fo = open(img_save_path + pathNum + '\\last_train_pix_xy.txt', "a+")
-    inputStr = ''
-    for pixel in pixel_list:
-        inputStr += str(pixel) + " "
-    inputStr += '\n'
-    fo.write(inputStr)
-    fo.close()
-    cv2.destroyWindow(str(i))
-    i += 1
+    # k = cv2.waitKey(0)
+    # while k != 13:
+    #     k = cv2.waitKey(0)
+    #
+    # pathNum = input('输入：')
+    # l = os.listdir(img_save_path + pathNum)
+    # size = len(l)
+    # size += 1
+    # cv2.imwrite(img_save_path + pathNum + '\\' + str(size) + '.bmp', img)
+    #
+    # # 生成模型集
+    # pixel_list = get_feature(bin)
+    #
+    # fo = open(img_save_path + pathNum + '\\last_train_pix_xy.txt', "a+")
+    # inputStr = ''
+    # for pixel in pixel_list:
+    #     inputStr += str(pixel) + " "
+    # inputStr += '\n'
+    # fo.write(inputStr)
+    # fo.close()
+    # cv2.destroyWindow(str(i))
+    # i += 1
 
 cv2.waitKey(0)
 

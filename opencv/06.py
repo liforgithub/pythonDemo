@@ -9,6 +9,7 @@
 import cv2
 import numpy as np
 import os
+import matplotlib.pyplot as plt
 
 # 生成训练集
 def get_feature(img):
@@ -16,6 +17,7 @@ def get_feature(img):
     pointList = []
     for height in range(h):
         wCount = 0
+
         for width in range(w):
             if bin[height, width] == 255:
                 wCount += 1
@@ -155,7 +157,7 @@ def getEffectiveArea(img, srcImg):
 
 
 img = cv2.imread('./img/01.bmp')
-# cv2.imshow('src-img', img)
+cv2.imshow('src-img', img)
 
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -180,8 +182,8 @@ erosion = cv2.erode(th3, kernel, iterations=1)
 # 膨胀一次，让轮廓突出
 kernel = np.ones((15, 15), np.uint8)
 dilation = cv2.dilate(erosion, kernel, iterations=1)
-# cv2.imshow('th3-dilation', dilation)
-# cv2.waitKey(0)
+cv2.imshow('th3-dilation', dilation)
+cv2.waitKey(0)
 
 box, angel = findPlateNumberRegion(dilation, 10, 6)
 
@@ -192,7 +194,7 @@ coordinate = getRectangularCoordinate(box)
 img_org2 = srcImg.copy()
 
 img_plate = img_org2[coordinate[2]:coordinate[3], coordinate[0]:coordinate[1]]
-# cv2.imshow('number plate', img_plate)
+cv2.imshow('number plate', img_plate)
 
 rows, cols, _ = img_plate.shape
 # 这里的第一个参数为旋转中心，第二个为旋转角度，第三个为旋转后的缩放因子
@@ -201,8 +203,8 @@ M = cv2.getRotationMatrix2D((cols / 2, rows / 2), angel, 1)
 # 第三个参数是输出图像的尺寸中心
 dst = cv2.warpAffine(img_plate, M, (cols, rows))
 
-# cv2.imshow('dst', dst)
-# cv2.waitKey(0)
+cv2.imshow('dst', dst)
+cv2.waitKey(0)
 
 gray = cv2.cvtColor(dst, cv2.COLOR_BGR2GRAY)
 
@@ -213,11 +215,12 @@ ret3, th3 = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 # cv2.imshow('th3-eff', th3)
 # cv2.waitKey(0)
 
+
 kernel = np.ones((4, 3), np.uint8)
 dilation = cv2.dilate(th3, kernel, iterations=1)
 
-# cv2.imshow('end-dilation', dilation)
-# cv2.waitKey(0)
+cv2.imshow('end-dilation', dilation)
+cv2.waitKey(0)
 
 # 分割字符
 boxList = findPlateNumberRegion2(dilation)
