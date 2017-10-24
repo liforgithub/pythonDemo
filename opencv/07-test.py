@@ -23,7 +23,6 @@ h, w, _ = srcImg.shape
 if h > 1000:
     yN = int(h / 600)
     srcImg = cv2.resize(srcImg, (int(w / yN), int(h / yN)), interpolation=cv2.INTER_CUBIC)
-print(h)
 
 """
 灰度处理图片
@@ -172,7 +171,12 @@ ret, bin_adaptiveThreshold = cv2.threshold(gbr, 50, 255, cv2.THRESH_BINARY_INV)
 cv2.imshow('gray', bin_adaptiveThreshold)
 cv2.waitKey(0)
 
-(_, contours, _) = cv2.findContours(bin_adaptiveThreshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+kernel = np.ones((3, 3), np.uint8)
+dilation = cv2.dilate(bin_adaptiveThreshold, kernel, iterations=1)
+cv2.imshow('dilation', dilation)
+cv2.waitKey(0)
+
+(_, contours, _) = cv2.findContours(dilation, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
 region = []
 for i in range(len(contours)):
@@ -205,4 +209,6 @@ for box in region:
     imgList.append(img_plate)
 
     cv2.imshow(str(i), img_plate)
+    cv2.imwrite('E:\\pythonDemo\\opencv\\tmp\\' + str(i) + '.bmp', img_plate)
     cv2.waitKey(0)
+    i += 1
