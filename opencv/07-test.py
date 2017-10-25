@@ -8,6 +8,7 @@
 
 import cv2
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 
 """
@@ -209,6 +210,9 @@ for box in region:
     imgList.append(img_plate)
 
     cv2.imshow(str(i), img_plate)
-    cv2.imwrite('E:\\pythonDemo\\opencv\\tmp\\' + str(i) + '.bmp', img_plate)
+    l = os.listdir('E:\\pythonDemo\\opencv\\tmp')
+    size = len(l)
+    size += 1
+    cv2.imwrite('E:\\pythonDemo\\opencv\\tmp\\' + str(size) + '.bmp', img_plate)
     cv2.waitKey(0)
     i += 1
