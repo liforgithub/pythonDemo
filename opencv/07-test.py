@@ -14,21 +14,28 @@ import matplotlib.pyplot as plt
 """
 加载图片
 """
-SRC_IMG_PATH = './img/01.bmp'
+# SRC_IMG_PATH = './img/01.bmp'
 # SRC_IMG_PATH = './img/3.bmp'
 # SRC_IMG_PATH = './img/04.bmp'
+SRC_IMG_PATH = './img/id_card14.bmp'
 srcImg = cv2.imread(SRC_IMG_PATH)
 # 可以直接以灰度图片打开，这里便于后面观察，以原图打开，下一步在进行灰度处理
 # srcImg = cv2.imread(SRC_IMG_PATH, 0)
 h, w, _ = srcImg.shape
-if h > 1000:
+if h > 600:
     yN = int(h / 600)
     srcImg = cv2.resize(srcImg, (int(w / yN), int(h / yN)), interpolation=cv2.INTER_CUBIC)
+
+cv2.imshow('srcImg', srcImg)
+cv2.waitKey(0)
 
 """
 灰度处理图片
 """
 gray = cv2.cvtColor(srcImg, cv2.COLOR_BGR2GRAY)
+
+cv2.imshow('gray', gray)
+cv2.waitKey(0)
 
 """
 高斯模糊
@@ -37,8 +44,8 @@ gbr = cv2.GaussianBlur(gray, (5, 5), 0)
 
 edges = cv2.Canny(gbr, 100, 200)
 
-# cv2.imshow('gbr', edges)
-# cv2.waitKey(0)
+cv2.imshow('gbr', edges)
+cv2.waitKey(0)
 
 """
 寻找身份证

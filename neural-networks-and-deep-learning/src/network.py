@@ -19,16 +19,6 @@ import numpy as np
 
 class Network(object):
     def __init__(self, sizes):
-        """The list ``sizes`` contains the number of neurons in the
-        respective layers of the network.  For example, if the list
-        was [2, 3, 1] then it would be a three-layer network, with the
-        first layer containing 2 neurons, the second layer 3 neurons,
-        and the third layer 1 neuron.  The biases and weights for the
-        network are initialized randomly, using a Gaussian
-        distribution with mean 0, and variance 1.  Note that the first
-        layer is assumed to be an input layer, and by convention we
-        won't set any biases for those neurons, since biases are only
-        ever used in computing the outputs from later layers."""
         self.num_layers = len(sizes)
         self.sizes = sizes
         self.biases = [np.random.randn(y, 1) for y in sizes[1:]]
@@ -41,24 +31,30 @@ class Network(object):
             a = sigmoid(np.dot(w, a) + b)
         return a
 
-    def SGD(self, training_data, epochs, mini_batch_size, eta, test_data=None):
-        """Train the neural network using mini-batch stochastic
-        gradient descent.  The ``training_data`` is a list of tuples
-        ``(x, y)`` representing the training inputs and the desired
-        outputs.  The other non-optional parameters are
-        self-explanatory.  If ``test_data`` is provided then the
-        network will be evaluated against the test data after each
-        epoch, and partial progress printed out.  This is useful for
-        tracking progress, but slows things down substantially."""
 
+    """
+    @param training_data   训练数据 50000个
+    @Param epochs          迭代次数
+    @Param mini_batch_size 最小训练块
+    @Param eta             学习速率
+    @Param test_data       测试数据
+    """
+    def SGD(self, training_data, epochs, mini_batch_size, eta, test_data=None):
         # zip --> list
         test_data = list(test_data)
         training_data = list(training_data)
 
+        # n_test = 10000
         if test_data: n_test = len(test_data)
+
+        # n = 50000
         n = len(training_data)
         for j in range(epochs):
+
+            # 将序列的所有元素随机排序
             random.shuffle(training_data)
+
+            # 以10个为一组，将training_data分成5000份
             mini_batches = [
                 training_data[k:k + mini_batch_size]
                 for k in range(0, n, mini_batch_size)]
@@ -102,8 +98,7 @@ class Network(object):
             activation = sigmoid(z)
             activations.append(activation)
         # backward pass
-        delta = self.cost_derivative(activations[-1], y) * \
-                sigmoid_prime(zs[-1])
+        delta = self.cost_derivative(activations[-1], y) * sigmoid_prime(zs[-1])
         nabla_b[-1] = delta
         nabla_w[-1] = np.dot(delta, activations[-2].transpose())
         # Note that the variable l in the loop below is used a little
