@@ -101,23 +101,28 @@ class Network(object):
                        for b, nb in zip(self.biases, nabla_b)]
 
     def backprop(self, x, y):
-        """Return a tuple ``(nabla_b, nabla_w)`` representing the
-        gradient for the cost function C_x.  ``nabla_b`` and
-        ``nabla_w`` are layer-by-layer lists of numpy arrays, similar
-        to ``self.biases`` and ``self.weights``."""
+        # 初始化
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
-        # feedforward
+
+        # 将图像的数值矩阵赋值给activation
         activation = x
-        activations = [x]  # list to store all the activations, layer by layer
-        zs = []  # list to store all the z vectors, layer by layer
+        # 使用图像的数值矩阵赋值给activations数组作为第一个元素
+        activations = [x]
+        #定义装载(z)的容器
+        zs = []
+        #以下循环会循环网络层数(n) 的n-1次,依次为1-2,2-3，...(n-1)-n
+        #其中每次上一层计算出来的结果(activation)会作为下一次计算的输入,依次迭代
         for b, w in zip(self.biases, self.weights):
+            #计算z值
             z = np.dot(w, activation) + b
             zs.append(z)
+            #S函数计算
             activation = sigmoid(z)
             activations.append(activation)
 
-        # backward pass
+        #############################反向传播######################################
+        #activations[-1]为输出的计算值(可以认为是某一次识别出来的结果)
         delta = self.cost_derivative(activations[-1], y) * sigmoid_prime(zs[-1])
         nabla_b[-1] = delta
         nabla_w[-1] = np.dot(delta, activations[-2].transpose())
