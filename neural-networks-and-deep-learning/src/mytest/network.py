@@ -162,6 +162,7 @@ def sigmoid(z):
     return 1.0 / (1.0 + np.exp(-z))
 
 
+#计算S函数的导数
 def sigmoid_prime(z):
     """Derivative of the sigmoid function."""
     return sigmoid(z) * (1 - sigmoid(z))

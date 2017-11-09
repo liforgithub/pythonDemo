@@ -55,28 +55,30 @@ def feedforward(a):
     return a
 
 
-# card = [4, 1, 3, 0, 2, 6, 1, 9, 9, 2, 1, 2, 2, 7, 5, 7, 1, 3]
-# n = 0
-# pkllist = []
-# for i in range(1, 37):
-#     srcImg = cv2.imread(f'./tmp/{i}.bmp', 0)
-#     gray = cv2.equalizeHist(srcImg)
-#     cv2.imshow('equalizeHist', gray)
-#     cv2.waitKey(0)
-#
-#     array = np.array(gray)  # array is a numpy array
-#     ary = []
-#     for x in array:
-#         for y in x:
-#             aa = [float(Decimal((255 - y) / 255).quantize(Decimal('0.00000000')))]
-#             ary.append(aa)
-#     if n == len(card):
-#         n = 0
-#     print(card[n])
-#     pkllist.append((ary, card[n]))
-#     n += 1
-# fw = open('./data.pkl', 'wb+')
-# pickle.dump(pkllist, fw)
+card = [4, 1, 3, 0, 2, 6, 1, 9, 9, 2, 1, 2, 2, 7, 5, 7, 1, 3]
+n = 0
+pkllist = []
+for i in range(1, 37):
+    srcImg = cv2.imread(f'./tmp/{i}.bmp', 0)
+    gray = cv2.equalizeHist(srcImg)
+    cv2.imshow('equalizeHist', gray)
+    cv2.waitKey(0)
+
+    array = np.array(gray)  # array is a numpy array
+    print(array)
+    cv2.waitKey(0)
+    ary = []
+    for x in array:
+        for y in x:
+            aa = [float(Decimal((255 - y) / 255).quantize(Decimal('0.00000000')))]
+            ary.append(aa)
+    if n == len(card):
+        n = 0
+    print(card[n])
+    pkllist.append((ary, card[n]))
+    n += 1
+fw = open('./data.pkl', 'wb+')
+pickle.dump(pkllist, fw)
 
 data = pickle.load(open('./data.pkl', 'rb'))
 for x, y in data:
