@@ -8,5 +8,6 @@
 import pickle
 from numpy import *
 
-data = pickle.load(open('./data.pkl', 'rb'))
-print(len(data))
+data, test = pickle.load(open('./data.pkl', 'rb'))
+
+print(test[0])

@@ -21,5 +21,5 @@ def download(n):
         f.close()
     print(n)
 
-for i in range(1, 5001):
+for i in range(1, 101):
     download(i)
