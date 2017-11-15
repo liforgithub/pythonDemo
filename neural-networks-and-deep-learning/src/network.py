@@ -22,8 +22,23 @@ class Network(object):
         self.num_layers = len(sizes)
         self.sizes = sizes
         self.biases = [np.random.randn(y, 1) for y in sizes[1:]]
-        self.weights = [np.random.randn(y, x)
-                        for x, y in zip(sizes[:-1], sizes[1:])]
+        self.weights = [np.random.randn(y, x) for x, y in zip(sizes[:-1], sizes[1:])]
+
+        self.endbiases = [np.random.randn(y, 1) for y in sizes[1:]]
+        self.endweights = [np.random.randn(y, x) for x, y in zip(sizes[:-1], sizes[1:])]
+        self.rightCount = 0
+
+
+    def getEnd(self):
+        return self.endweights, self.endbiases
+    def setEnd(self):
+        self.endweights = self.weights
+        self.endbiases = self.biases
+    def getRightCount(self):
+        return self.rightCount
+    def setRightCount(self, count):
+        self.rightCount = count
+
 
     def feedforward(self, a):
         """Return the output of the network if ``a`` is input."""
@@ -62,6 +77,9 @@ class Network(object):
                 self.update_mini_batch(mini_batch, eta)
             if test_data:
                 print(f"Epoch {j}: {self.evaluate(test_data)} / {n_test}")
+                if self.getRightCount() < self.evaluate(test_data):
+                    self.setRightCount(self.evaluate(test_data))
+                    self.setEnd()
             else:
                 print(f"Epoch {j} complete")
 
@@ -73,6 +91,7 @@ class Network(object):
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
         for x, y in mini_batch:
+            # 计算偏导数，∂Cx/∂blj 和 ∂Cx/∂wljk。
             delta_nabla_b, delta_nabla_w = self.backprop(x, y)
             nabla_b = [nb + dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
             nabla_w = [nw + dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
@@ -97,6 +116,7 @@ class Network(object):
             zs.append(z)
             activation = sigmoid(z)
             activations.append(activation)
+
         # backward pass
         delta = self.cost_derivative(activations[-1], y) * sigmoid_prime(zs[-1])
         nabla_b[-1] = delta

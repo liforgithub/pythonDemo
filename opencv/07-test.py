@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 # SRC_IMG_PATH = './img/01.bmp'
 # SRC_IMG_PATH = './img/3.bmp'
 # SRC_IMG_PATH = './img/04.bmp'
-SRC_IMG_PATH = './img/id_card14.bmp'
+SRC_IMG_PATH = './img/id_card003.bmp'
 srcImg = cv2.imread(SRC_IMG_PATH)
 # 可以直接以灰度图片打开，这里便于后面观察，以原图打开，下一步在进行灰度处理
 # srcImg = cv2.imread(SRC_IMG_PATH, 0)
@@ -41,7 +41,6 @@ cv2.waitKey(0)
 高斯模糊
 """
 gbr = cv2.GaussianBlur(gray, (5, 5), 0)
-
 edges = cv2.Canny(gbr, 100, 200)
 
 cv2.imshow('gbr', edges)
@@ -220,6 +219,7 @@ for box in region:
     l = os.listdir('E:\\pythonDemo\\opencv\\tmp')
     size = len(l)
     size += 1
-    cv2.imwrite('E:\\pythonDemo\\opencv\\tmp\\' + str(size) + '.bmp', img_plate)
+    srcImg = cv2.resize(img_plate, (28, 28), interpolation=cv2.INTER_CUBIC)
+    cv2.imwrite('E:\\pythonDemo\\opencv\\tmp\\' + str(size) + '.bmp', srcImg)
     cv2.waitKey(0)
     i += 1
