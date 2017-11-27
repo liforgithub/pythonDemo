@@ -3,7 +3,7 @@
 
 # @Time    : 2017/10/14 0014 上午 10:18
 # @Author  : 李雪洋
-# @File    : 01.py
+# @File    : download.py
 # @Software: PyCharm
 
 import cv2

@@ -10,13 +10,12 @@ import pickle
 import network
 
 training_data, test_data = pickle.load(open('./data.pkl', 'rb'))
-w, b = pickle.load(open('./w-b.pkl', 'rb'))
+# w, b = pickle.load(open('./w-b.pkl', 'rb'))
 
 net = network.Network([900, 30, 26])
-net.setWB(w, b)
-net.SGD(training_data, 1000, 10, 3.0, test_data=test_data)
+# net.setWB(w, b)
+net.SGD(training_data, 1000, 20, 3.0, test_data=test_data)
 w, b = net.getEnd()
-# fw = open('./w-b.pkl', 'wb+')
-fw = open('./w-b.pkl', 'wb+')
+fw = open('./w-b2.pkl', 'wb+')
 pickle.dump((w, b), fw)
 fw.close()
