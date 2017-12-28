@@ -16,7 +16,6 @@ def index():
 
 @app.route('/user', methods=['POST'])
 def adduser():
-
     return jsonify({'task': request.form.get('user')}), 201
 
 if __name__ == '__main__':
