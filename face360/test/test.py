@@ -11,6 +11,7 @@ import pickle
 import datetime
 
 
+# noinspection PyShadowingNames
 def findFace(image):
     # face_locations = face_recognition.face_locations(image, number_of_times_to_upsample=0, model='cnn')
     face_locations = face_recognition.face_locations(image)
@@ -21,18 +22,23 @@ begin = datetime.datetime.now()
 
 data = pickle.load(open('./data.pkl', 'rb'))
 
-unknown_image = face_recognition.load_image_file('.\\src\\1.jpg')
+unknown_image = face_recognition.load_image_file('.\\src\\我.jpg')
 
 unknown_encoding = face_recognition.face_encodings(findFace(unknown_image))[0]
 
-compareName = ''
-for (name, image, encoding) in data:
+# compareName = ''
+# for (name, image, encoding) in data:
+#
+#     # face_encoding = face_recognition.face_encodings(image)[0]
+#     results = face_recognition.compare_faces([encoding], unknown_encoding, tolerance=0.5)
+#     if results[0]:
+#         compareName = name
+#         break
 
-    # face_encoding = face_recognition.face_encodings(image)[0]
-    results = face_recognition.compare_faces([encoding], unknown_encoding, tolerance=0.5)
-    if results[0]:
-        compareName = name
-        break
+results = face_recognition.compare_faces([d[2] for d in data], unknown_encoding, tolerance=0.5)
+index = results.index(True)
+if index >= 0:
+    compareName = data[index][0]
 
 end = datetime.datetime.now()
 print((end - begin).total_seconds())
