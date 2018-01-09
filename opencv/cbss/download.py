@@ -7,6 +7,7 @@
 # @Software: PyCharm
 
 # https://hq.cbss.10010.com/image?mode=validate&width=60&height=20&random=0.5718313927110062
+#https://www.jft.net.cn:4433/NewMember/memberAct/userDo/getCheckCodeImage.jsp?type=cardLogin&nowtime=1511783584031
 import requests
 
 def download(n):

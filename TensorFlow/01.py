@@ -3,7 +3,7 @@
 
 # @Time    : 2017/10/20 0020 上午 10:52
 # @Author  : 李雪洋
-# @File    : 01.py
+# @File    : download.py
 # @Software: PyCharm
 
 import tensorflow as tf

@@ -13,7 +13,7 @@ import cv2
 
 dir_name = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
-img_path = 'E:\\pythonDemo\\opencv\\cbss\\spit\\913.bmp'
+img_path = 'E:\\pythonDemo\\opencv\\cbss\\spit\\5848.bmp'
 w, b = pickle.load(open('./w-b.pkl', 'rb'))
 
 img = cv2.imread(img_path, 0)

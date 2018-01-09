@@ -3,7 +3,7 @@
 
 # @Time    : 2017/11/8 0008 下午 19:18
 # @Author  : 李雪洋
-# @File    : 01.py
+# @File    : download.py
 # @Software: PyCharm
 import cv2
 import numpy as np

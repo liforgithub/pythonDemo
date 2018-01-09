@@ -3,7 +3,7 @@
 
 # @Time    : 2017/10/12 0012 上午 10:49
 # @Author  : 李雪洋
-# @File    : 01.py
+# @File    : download.py
 # @Software: PyCharm
 
 from PIL import Image
