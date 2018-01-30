@@ -7,6 +7,7 @@
 # @Software: PyCharm
 
 from flask import *
+import pickle
 
 app = Flask(__name__)
 
@@ -17,6 +18,11 @@ def index():
 @app.route('/user', methods=['POST'])
 def adduser():
     return jsonify({'task': request.form.get('user')}), 201
+
+@app.route('/getList', methods=['GET'])
+def getList():
+    data = pickle.load(open('./data.pkl', 'rb'))
+    return jsonify({'list': data}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

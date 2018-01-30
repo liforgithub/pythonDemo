@@ -32,6 +32,7 @@ for tr in list_province:
         ))
 
 tmpCityList = []
+#省
 for href, name in tmpPrivinceList:
     tmpUrl = url + href
     req = urllib.request.Request(tmpUrl, headers=headers)
@@ -39,14 +40,28 @@ for href, name in tmpPrivinceList:
     soup = bs4.BeautifulSoup(res, 'html.parser')
     list_city = soup.select(".citytr")
 
+    #市
     for city in list_city:
         a_list = city.select('a')
         for i in range(0, len(a_list), 2):
-            tmpCityList.append((
-                a_list[i].get('href'),
-                a_list[i].text,
-                a_list[i + 1].text
-            ))
+            href = a_list[i].get('href')
+            num = a_list[i].text
+            name = a_list[i + 1].text
+
+            #区
+            tmpUrl = url + href
+            req = urllib.request.Request(tmpUrl, headers=headers)
+            res = urllib.request.urlopen(req).read()
+            soup = bs4.BeautifulSoup(res, 'html.parser')
+            list_county = soup.select(".countytr")
+
+            for county in list_county:
+                a_list_2 = county.select('a')
+                for ii in range(0, len(a_list_2), 2):
+                    county_href = a_list_2[ii].get('href')
+                    county_num = a_list_2[ii].text
+                    county_name = a_list_2[ii + 1].text
+
+                    #
     break
-print(tmpCityList)
 
