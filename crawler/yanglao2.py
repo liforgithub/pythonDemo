@@ -80,6 +80,27 @@ for i in range(0, len(table)):
             print(f"{table[i]['label']} - {table[i]['children'][j]['label']}")
             pickle.dump(table, open('./data.pkl', 'wb'))
 
+# 录取街道
+for i in range(0, len(table)):
+    for j in range(0, len(table[i]['children'])):
+        for k in range(0, len(table[i]['children'][j]['children'])):
+            if len(table[i]['children'][j]['children'][k]['children']) == 0:
+                href = table[i]['children'][j]['children'][k]['href']
+                tmpUrl = url + href
+                req = urllib.request.Request(tmpUrl, headers=headers)
+                res = urllib.request.urlopen(req).read()
+                soup = bs4.BeautifulSoup(res, 'html.parser')
+                list_towntr = soup.select(".towntr")
+                for towntr in list_towntr:
+                    a_list_tower = towntr.select('a')
+                    if len(a_list_tower) > 0:
+                        table[i]['children'][j]['children'][k]['children'].append({
+                            'children': [],
+                            'label': a_list_tower[1].text,
+                            'href': href[0:href.rindex('/')] + '/' + a_list_tower[0].get('href'),
+                            'value': a_list_tower[0].text
+                        })
+
+                pickle.dump(table, open('./data.pkl', 'wb'))
+                print(f"{table[i]['label']} - {table[i]['children'][j]['label']} - {table[i]['children'][j]['children'][k]['label']}")
 print(table)
-
-
